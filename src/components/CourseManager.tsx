@@ -70,14 +70,25 @@ const CourseManager: React.FC<CourseManagerProps> = ({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white dark:bg-gray-800 rounded-2xl shadow-telkom p-8 border border-red-100 dark:border-gray-700"
+      className="glass-card rounded-3xl p-8 border border-white/20 backdrop-blur-xl shadow-2xl"
     >
       <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <BookOpen className="w-6 h-6 text-telkom-red" />
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
-            Manajemen Mata Kuliah
-          </h2>
+        <div className="flex items-center gap-4">
+          <motion.div
+            whileHover={{ rotate: 360 }}
+            transition={{ duration: 0.5 }}
+            className="p-3 bg-gradient-to-br from-telkom-red to-telkom-brightRed rounded-2xl shadow-lg"
+          >
+            <BookOpen className="w-6 h-6 text-white" />
+          </motion.div>
+          <div>
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+              Manajemen Mata Kuliah
+            </h2>
+            <p className="text-sm text-telkom-gray dark:text-gray-400">
+              Kelola mata kuliah dan nilai akademik Anda
+            </p>
+          </div>
         </div>
         
         <div className="flex items-center gap-2">
@@ -155,37 +166,66 @@ const CourseManager: React.FC<CourseManagerProps> = ({
         )}
       </AnimatePresence>
 
-      <div className="space-y-4 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <AnimatePresence>
-          {courses.map((course) => (
-            <CourseCard
+          {courses.map((course, index) => (
+            <motion.div
               key={course.id}
-              course={course}
-              updateCourse={updateCourse}
-              removeCourse={removeCourse}
-              gradingScale={gradingScale}
-            />
+              initial={{ opacity: 0, scale: 0.8, y: 20 }}
+              animate={{ 
+                opacity: 1, 
+                scale: 1, 
+                y: 0,
+                transition: { 
+                  delay: index * 0.1,
+                  type: "spring",
+                  stiffness: 100
+                }
+              }}
+              exit={{ 
+                opacity: 0, 
+                scale: 0.8, 
+                y: -20,
+                transition: { duration: 0.2 }
+              }}
+              whileHover={{ 
+                scale: 1.02,
+                transition: { duration: 0.2 }
+              }}
+              className="hover:shadow-lg transition-shadow duration-300"
+            >
+              <CourseCard
+                course={course}
+                updateCourse={updateCourse}
+                removeCourse={removeCourse}
+                gradingScale={gradingScale}
+              />
+            </motion.div>
           ))}
         </AnimatePresence>
       </div>
 
       <div className="flex gap-3">
-        <button
+        <motion.button
           onClick={() => addCourse()}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           className="btn-primary flex-1"
         >
           <Plus className="w-4 h-4" />
           Tambah Mata Kuliah
-        </button>
+        </motion.button>
         
         {courses.length > 0 && (
-          <button
+          <motion.button
             onClick={clearAllCourses}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             className="btn-danger"
           >
             <Trash2 className="w-4 h-4" />
             Hapus Semua
-          </button>
+          </motion.button>
         )}
       </div>
     </motion.div>

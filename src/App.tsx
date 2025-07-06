@@ -10,6 +10,9 @@ import ThemeToggle from './components/ThemeToggle';
 import AIAssistant from './components/AIAssistant';
 import PerformanceAnalytics from './components/PerformanceAnalytics';
 import CurriculumPlanner from './components/CurriculumPlanner';
+import Documentation from './components/Documentation';
+import AIAnalysis from './components/AIAnalysis';
+import NavigationController from './components/NavigationController';
 import { Course, StudentData, GradingScale } from './types';
 import { calculateGPA, getPredicate } from './utils/gpaCalculations';
 import { loadCurriculumData } from './utils/curriculumLoader';
@@ -29,6 +32,7 @@ function App() {
   const [darkMode, setDarkMode] = useState(false);
   const [curriculumData, setCurriculumData] = useState<any>({});
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState<'home' | 'documentation' | 'ai-analysis'>('home');
 
   useEffect(() => {
     const initializeApp = async () => {
@@ -107,38 +111,158 @@ function App() {
     );
   }
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-all duration-500">
-      {/* Animated Background Elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          animate={{
-            x: [0, 100, 0],
-            y: [0, -100, 0],
-            rotate: [0, 180, 360],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-          className="absolute -top-20 -left-20 w-40 h-40 bg-gradient-to-r from-telkom-red/10 to-telkom-brightRed/10 rounded-full blur-xl"
-        />
-        <motion.div
-          animate={{
-            x: [0, -150, 0],
-            y: [0, 100, 0],
-            rotate: [360, 180, 0],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-          className="absolute -bottom-20 -right-20 w-60 h-60 bg-gradient-to-l from-telkom-red/5 to-telkom-brightRed/5 rounded-full blur-2xl"
-        />
-      </div>
+  const renderCurrentPage = () => {
+    switch (currentPage) {
+      case 'documentation':
+        return <Documentation />;
+      case 'ai-analysis':
+        return (
+          <AIAnalysis 
+            courses={courses}
+            gpaResult={gpaResult}
+            studentData={studentData}
+          />
+        );
+      default:
+        return (
+          <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-all duration-500">
+            {/* Animated Background Elements */}
+            <div className="fixed inset-0 overflow-hidden pointer-events-none">
+              <motion.div
+                animate={{
+                  x: [0, 100, 0],
+                  y: [0, -100, 0],
+                  rotate: [0, 180, 360],
+                }}
+                transition={{
+                  duration: 20,
+                  repeat: Infinity,
+                  ease: "linear"
+                }}
+                className="absolute -top-20 -left-20 w-40 h-40 bg-gradient-to-r from-telkom-red/10 to-telkom-brightRed/10 rounded-full blur-xl"
+              />
+              <motion.div
+                animate={{
+                  x: [0, -150, 0],
+                  y: [0, 100, 0],
+                  rotate: [360, 180, 0],
+                }}
+                transition={{
+                  duration: 25,
+                  repeat: Infinity,
+                  ease: "linear"
+                }}
+                className="absolute -bottom-20 -right-20 w-60 h-60 bg-gradient-to-l from-telkom-red/5 to-telkom-brightRed/5 rounded-full blur-2xl"
+              />
+            </div>
 
+            <div className="container mx-auto px-4 py-8 max-w-7xl relative z-10">
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+              >
+                <Header />
+              </motion.div>
+
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+                {/* Left Column - Input Forms */}
+                <div className="xl:col-span-2 space-y-8">
+                  <motion.div
+                    initial={{ opacity: 0, x: -50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.8, delay: 0.1 }}
+                  >
+                    <StudentInfo 
+                      studentData={studentData}
+                      setStudentData={setStudentData}
+                      curriculumData={curriculumData}
+                    />
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, x: -50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
+                  >
+                    <CurriculumPlanner
+                      curriculumData={curriculumData}
+                      studentData={studentData}
+                      addCourse={addCourse}
+                    />
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, x: -50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.8, delay: 0.3 }}
+                  >
+                    <CourseManager
+                      courses={courses}
+                      addCourse={addCourse}
+                      updateCourse={updateCourse}
+                      removeCourse={removeCourse}
+                      clearAllCourses={clearAllCourses}
+                      gradingScale={gradingScale}
+                      setGradingScale={setGradingScale}
+                      curriculumData={curriculumData}
+                      studentData={studentData}
+                    />
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, x: -50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.8, delay: 0.4 }}
+                  >
+                    <PerformanceAnalytics courses={courses} />
+                  </motion.div>
+                </div>
+
+                {/* Right Column - Results and Info */}
+                <div className="space-y-8">
+                  <motion.div
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
+                  >
+                    <ResultsPanel
+                      gpaResult={gpaResult}
+                      predicate={predicate}
+                      studentData={studentData}
+                      courses={courses}
+                    />
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.8, delay: 0.3 }}
+                  >
+                    <AIAssistant 
+                      courses={courses}
+                      gpaResult={gpaResult}
+                      studentData={studentData}
+                    />
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.8, delay: 0.4 }}
+                  >
+                    <InfoTabs programLevel={studentData.programLevel} />
+                  </motion.div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+    }
+  };
+
+  return (
+    <>
       <Toaster 
         position="top-right"
         toastOptions={{
@@ -153,110 +277,27 @@ function App() {
         }}
       />
       
-      <div className="container mx-auto px-4 py-8 max-w-7xl relative z-10">
+      <AnimatePresence mode="wait">
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
+          key={currentPage}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3 }}
         >
-          <Header />
+          {renderCurrentPage()}
         </motion.div>
+      </AnimatePresence>
 
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-          {/* Left Column - Input Forms */}
-          <div className="xl:col-span-2 space-y-8">
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.1 }}
-            >
-              <StudentInfo 
-                studentData={studentData}
-                setStudentData={setStudentData}
-                curriculumData={curriculumData}
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
-              <CurriculumPlanner
-                curriculumData={curriculumData}
-                studentData={studentData}
-                addCourse={addCourse}
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-            >
-              <CourseManager
-                courses={courses}
-                addCourse={addCourse}
-                updateCourse={updateCourse}
-                removeCourse={removeCourse}
-                clearAllCourses={clearAllCourses}
-                gradingScale={gradingScale}
-                setGradingScale={setGradingScale}
-                curriculumData={curriculumData}
-                studentData={studentData}
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-            >
-              <PerformanceAnalytics courses={courses} />
-            </motion.div>
-          </div>
-
-          {/* Right Column - Results and Info */}
-          <div className="space-y-8">
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
-              <ResultsPanel
-                gpaResult={gpaResult}
-                predicate={predicate}
-                studentData={studentData}
-                courses={courses}
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-            >
-              <AIAssistant 
-                courses={courses}
-                gpaResult={gpaResult}
-                studentData={studentData}
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-            >
-              <InfoTabs programLevel={studentData.programLevel} />
-            </motion.div>
-          </div>
-        </div>
-      </div>
+      {/* Navigation Controller */}
+      <NavigationController 
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
+      />
 
       {/* Floating Theme Toggle */}
       <ThemeToggle darkMode={darkMode} setDarkMode={setDarkMode} />
-    </div>
+    </>
   );
 }
 
