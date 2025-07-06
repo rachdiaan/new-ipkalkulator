@@ -38,7 +38,7 @@ const NavigationController: React.FC<NavigationControllerProps> = ({
       animate={{ opacity: 1, y: 0 }}
       className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-40"
     >
-      <div className="glass-card rounded-2xl p-2 border border-white/30 backdrop-blur-xl shadow-2xl">
+      <div className="bg-white/20 dark:bg-gray-800/20 backdrop-blur-xl border border-white/30 dark:border-gray-700/30 rounded-2xl p-2 shadow-2xl">
         <div className="flex items-center gap-1 md:gap-2">
           {navItems.map((item) => {
             const Icon = item.icon;

@@ -15,7 +15,7 @@ const Header: React.FC = () => {
         <motion.img 
           src="https://smb.telkomuniversity.ac.id/wp-content/uploads/2023/03/Logo-Utama-Telkom-University.png" 
           alt="Logo Telkom University" 
-          className="h-16 md:h-20 w-auto drop-shadow-2xl dark:hidden"
+          className="h-20 w-auto drop-shadow-2xl dark:hidden"
           whileHover={{ scale: 1.05, rotate: 2 }}
           transition={{ type: "spring", stiffness: 300 }}
           onError={(e) => {
@@ -27,7 +27,7 @@ const Header: React.FC = () => {
         <motion.img 
           src="https://b1983693.smushcdn.com/1983693/wp-content/uploads/2024/04/Logo-Telkom-University.png?lossy=2&strip=1&webp=1" 
           alt="Logo Telkom University" 
-          className="h-16 md:h-20 w-auto drop-shadow-2xl hidden dark:block"
+          className="h-20 w-auto drop-shadow-2xl hidden dark:block"
           whileHover={{ scale: 1.05, rotate: 2 }}
           transition={{ type: "spring", stiffness: 300 }}
           onError={(e) => {
@@ -46,15 +46,6 @@ const Header: React.FC = () => {
             >
               Kalkulator Akademik Terpadu
             </motion.h1>
-            
-            <motion.p 
-              className="text-sm md:text-base text-telkom-gray dark:text-gray-400 mt-2"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-            >
-              Telkom University Academic Calculator
-            </motion.p>
           </div>
           
           <motion.div 

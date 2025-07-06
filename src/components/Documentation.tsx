@@ -163,7 +163,7 @@ const Documentation: React.FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 * index }}
                   whileHover={{ scale: 1.02 }}
-                  className="glass-card rounded-2xl p-6 hover:shadow-xl transition-all duration-300"
+                  className="bg-white/50 dark:bg-gray-800/50 rounded-2xl p-6 hover:shadow-xl transition-all duration-300"
                 >
                   <div className="flex items-center gap-3 mb-4">
                     <div className="p-3 bg-telkom-red/10 rounded-lg">
