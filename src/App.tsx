@@ -165,9 +165,9 @@ function App() {
                 <Header />
               </motion.div>
 
-              <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8">
                 {/* Left Column - Input Forms */}
-                <div className="xl:col-span-2 space-y-8">
+                <div className="xl:col-span-2 space-y-6 lg:space-y-8">
                   <motion.div
                     initial={{ opacity: 0, x: -50 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -220,7 +220,7 @@ function App() {
                 </div>
 
                 {/* Right Column - Results and Info */}
-                <div className="space-y-8">
+                <div className="space-y-6 lg:space-y-8">
                   <motion.div
                     initial={{ opacity: 0, x: 50 }}
                     animate={{ opacity: 1, x: 0 }}

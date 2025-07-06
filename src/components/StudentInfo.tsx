@@ -98,9 +98,9 @@ const StudentInfo: React.FC<StudentInfoProps> = ({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="glass-card rounded-3xl p-8 border border-white/20 backdrop-blur-xl shadow-2xl"
+      className="glass-card rounded-3xl p-6 lg:p-8 border border-white/20 backdrop-blur-xl shadow-2xl"
     >
-      <div className="flex items-center gap-4 mb-8">
+      <div className="flex items-center gap-4 mb-6 lg:mb-8">
         <motion.div
           whileHover={{ rotate: 360 }}
           transition={{ duration: 0.5 }}
@@ -109,7 +109,7 @@ const StudentInfo: React.FC<StudentInfoProps> = ({
           <User className="w-6 h-6 text-white" />
         </motion.div>
         <div>
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+          <h2 className="text-xl lg:text-2xl font-bold text-gray-800 dark:text-white">
             Informasi Mahasiswa
           </h2>
           <p className="text-sm text-telkom-gray dark:text-gray-400">
@@ -118,7 +118,7 @@ const StudentInfo: React.FC<StudentInfoProps> = ({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
         <div className="space-y-3">
           <label className="block text-sm font-medium text-telkom-gray dark:text-gray-300">
             Nama Lengkap

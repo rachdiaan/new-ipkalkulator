@@ -70,9 +70,9 @@ const CourseManager: React.FC<CourseManagerProps> = ({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="glass-card rounded-3xl p-8 border border-white/20 backdrop-blur-xl shadow-2xl"
+      className="glass-card rounded-3xl p-6 lg:p-8 border border-white/20 backdrop-blur-xl shadow-2xl"
     >
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
         <div className="flex items-center gap-4">
           <motion.div
             whileHover={{ rotate: 360 }}
@@ -82,7 +82,7 @@ const CourseManager: React.FC<CourseManagerProps> = ({
             <BookOpen className="w-6 h-6 text-white" />
           </motion.div>
           <div>
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+            <h2 className="text-xl lg:text-2xl font-bold text-gray-800 dark:text-white">
               Manajemen Mata Kuliah
             </h2>
             <p className="text-sm text-telkom-gray dark:text-gray-400">
@@ -99,10 +99,10 @@ const CourseManager: React.FC<CourseManagerProps> = ({
             <Settings className="w-5 h-5" />
           </button>
           
-          <div className="flex gap-2">
-            <label className="btn-secondary cursor-pointer">
+          <div className="flex flex-wrap gap-2">
+            <label className="btn-secondary cursor-pointer text-xs lg:text-sm">
               <Upload className="w-4 h-4" />
-              Impor CSV
+              <span className="hidden sm:inline">Impor CSV</span>
               <input
                 type="file"
                 accept=".csv"
@@ -112,9 +112,9 @@ const CourseManager: React.FC<CourseManagerProps> = ({
             </label>
             
             <div className="relative group">
-              <button className="btn-secondary">
+              <button className="btn-secondary text-xs lg:text-sm">
                 <Download className="w-4 h-4" />
-                Ekspor
+                <span className="hidden sm:inline">Ekspor</span>
               </button>
               <div className="absolute right-0 top-full mt-2 w-32 bg-white dark:bg-gray-700 rounded-lg shadow-lg border border-gray-200 dark:border-gray-600 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
                 <button
@@ -166,7 +166,7 @@ const CourseManager: React.FC<CourseManagerProps> = ({
         )}
       </AnimatePresence>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 mb-6">
         <AnimatePresence>
           {courses.map((course, index) => (
             <motion.div
@@ -205,7 +205,7 @@ const CourseManager: React.FC<CourseManagerProps> = ({
         </AnimatePresence>
       </div>
 
-      <div className="flex gap-3">
+      <div className="flex flex-col sm:flex-row gap-3">
         <motion.button
           onClick={() => addCourse()}
           whileHover={{ scale: 1.05 }}
@@ -224,7 +224,8 @@ const CourseManager: React.FC<CourseManagerProps> = ({
             className="btn-danger"
           >
             <Trash2 className="w-4 h-4" />
-            Hapus Semua
+            <span className="hidden sm:inline">Hapus Semua</span>
+            <span className="sm:hidden">Hapus</span>
           </motion.button>
         )}
       </div>

@@ -19,7 +19,7 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({ darkMode, setDarkMode }) => {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => setDarkMode(!darkMode)}
-        className="p-4 rounded-full bg-white/20 dark:bg-gray-800/20 backdrop-blur-xl border border-white/30 dark:border-gray-700/30 shadow-2xl transition-all duration-300 hover:shadow-telkom-red/20 hover:border-telkom-red/30"
+        className="p-3 md:p-4 rounded-full bg-white/20 dark:bg-gray-800/20 backdrop-blur-xl border border-white/30 dark:border-gray-700/30 shadow-2xl transition-all duration-300 hover:shadow-telkom-red/20 hover:border-telkom-red/30"
       >
         <motion.div
           initial={false}
@@ -27,9 +27,9 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({ darkMode, setDarkMode }) => {
           transition={{ duration: 0.5, ease: "easeInOut" }}
         >
           {darkMode ? (
-            <Sun className="w-6 h-6 text-yellow-500" />
+            <Sun className="w-5 h-5 md:w-6 md:h-6 text-yellow-500" />
           ) : (
-            <Moon className="w-6 h-6 text-telkom-gray" />
+            <Moon className="w-5 h-5 md:w-6 md:h-6 text-telkom-gray" />
           )}
         </motion.div>
       </motion.button>

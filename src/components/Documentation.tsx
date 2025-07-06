@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   BookOpen, 
   Calculator, 
@@ -12,10 +12,26 @@ import {
   Award,
   Target,
   Lightbulb,
-  TrendingUp
+  TrendingUp,
+  Menu,
+  X,
+  ChevronRight
 } from 'lucide-react';
 
 const Documentation: React.FC = () => {
+  const [activeSection, setActiveSection] = useState('overview');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const sections = [
+    { id: 'overview', title: 'Tentang Aplikasi', icon: BookOpen },
+    { id: 'features', title: 'Fitur Utama', icon: Calculator },
+    { id: 'usage', title: 'Cara Penggunaan', icon: Users },
+    { id: 'grading', title: 'Skala Penilaian', icon: Award },
+    { id: 'predicates', title: 'Predikat Kelulusan', icon: Target },
+    { id: 'ai-features', title: 'Fitur AI', icon: Brain },
+    { id: 'technical', title: 'Informasi Teknis', icon: Settings }
+  ];
+
   const features = [
     {
       icon: Calculator,
@@ -94,274 +110,391 @@ const Documentation: React.FC = () => {
     { name: 'Memuaskan', s1: '2.76 - 3.00', s2: '3.26 - 3.50', description: 'Prestasi akademik cukup baik' }
   ];
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-12">
-      <div className="container mx-auto px-4 max-w-6xl">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-16"
-        >
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <div className="p-4 bg-gradient-to-br from-telkom-red to-telkom-brightRed rounded-2xl shadow-lg">
-              <BookOpen className="w-8 h-8 text-white" />
+  const renderContent = () => {
+    switch (activeSection) {
+      case 'overview':
+        return (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-8"
+          >
+            <div>
+              <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-6">Tentang Aplikasi</h2>
+              <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
+                Kalkulator Akademik Terpadu adalah aplikasi web modern yang dirancang khusus untuk mahasiswa Telkom University. 
+                Aplikasi ini membantu mahasiswa dalam mengelola data akademik, menghitung IPK, merencanakan kurikulum, 
+                dan mendapatkan insight untuk meningkatkan performa akademik melalui teknologi AI.
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="text-center p-6 bg-telkom-red/10 rounded-xl">
+                  <Users className="w-12 h-12 text-telkom-red mx-auto mb-4" />
+                  <h3 className="font-semibold text-gray-800 dark:text-white mb-2">Untuk Mahasiswa</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Semua jenjang pendidikan</p>
+                </div>
+                <div className="text-center p-6 bg-blue-500/10 rounded-xl">
+                  <Calculator className="w-12 h-12 text-blue-500 mx-auto mb-4" />
+                  <h3 className="font-semibold text-gray-800 dark:text-white mb-2">Real-time</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Perhitungan otomatis</p>
+                </div>
+                <div className="text-center p-6 bg-green-500/10 rounded-xl">
+                  <Brain className="w-12 h-12 text-green-500 mx-auto mb-4" />
+                  <h3 className="font-semibold text-gray-800 dark:text-white mb-2">AI-Powered</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Rekomendasi cerdas</p>
+                </div>
+              </div>
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-telkom-red via-telkom-brightRed to-telkom-red bg-clip-text text-transparent">
-              Dokumentasi Aplikasi
-            </h1>
-          </div>
-          <p className="text-xl text-telkom-gray dark:text-gray-300 max-w-3xl mx-auto">
-            Panduan lengkap penggunaan Kalkulator Akademik Terpadu Telkom University
-          </p>
-        </motion.div>
+          </motion.div>
+        );
 
-        {/* Overview */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="glass-card rounded-3xl p-8 mb-12"
-        >
-          <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-6">Tentang Aplikasi</h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
-            Kalkulator Akademik Terpadu adalah aplikasi web modern yang dirancang khusus untuk mahasiswa Telkom University. 
-            Aplikasi ini membantu mahasiswa dalam mengelola data akademik, menghitung IPK, merencanakan kurikulum, 
-            dan mendapatkan insight untuk meningkatkan performa akademik melalui teknologi AI.
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="text-center p-4 bg-telkom-red/10 rounded-xl">
-              <Users className="w-8 h-8 text-telkom-red mx-auto mb-2" />
-              <h3 className="font-semibold text-gray-800 dark:text-white">Untuk Mahasiswa</h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Semua jenjang pendidikan</p>
-            </div>
-            <div className="text-center p-4 bg-blue-500/10 rounded-xl">
-              <Calculator className="w-8 h-8 text-blue-500 mx-auto mb-2" />
-              <h3 className="font-semibold text-gray-800 dark:text-white">Real-time</h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Perhitungan otomatis</p>
-            </div>
-            <div className="text-center p-4 bg-green-500/10 rounded-xl">
-              <Brain className="w-8 h-8 text-green-500 mx-auto mb-2" />
-              <h3 className="font-semibold text-gray-800 dark:text-white">AI-Powered</h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Rekomendasi cerdas</p>
-            </div>
-          </div>
-        </motion.section>
-
-        {/* Features */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="mb-12"
-        >
-          <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-8 text-center">Fitur Utama</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {features.map((feature, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 * index }}
-                whileHover={{ scale: 1.05 }}
-                className="glass-card rounded-2xl p-6 hover:shadow-xl transition-all duration-300"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2 bg-telkom-red/10 rounded-lg">
-                    <feature.icon className="w-6 h-6 text-telkom-red" />
+      case 'features':
+        return (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-8"
+          >
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-8">Fitur Utama</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {features.map((feature, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 * index }}
+                  whileHover={{ scale: 1.02 }}
+                  className="glass-card rounded-2xl p-6 hover:shadow-xl transition-all duration-300"
+                >
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="p-3 bg-telkom-red/10 rounded-lg">
+                      <feature.icon className="w-6 h-6 text-telkom-red" />
+                    </div>
+                    <h3 className="font-semibold text-gray-800 dark:text-white">{feature.title}</h3>
                   </div>
-                  <h3 className="font-semibold text-gray-800 dark:text-white">{feature.title}</h3>
-                </div>
-                <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
-                  {feature.description}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </motion.section>
+                  <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+                    {feature.description}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        );
 
-        {/* How to Use */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="glass-card rounded-3xl p-8 mb-12"
-        >
-          <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-8 text-center">Cara Penggunaan</h2>
-          <div className="space-y-6">
-            {steps.map((step, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1 * index }}
-                className="flex items-start gap-4 p-4 bg-white/50 dark:bg-gray-800/50 rounded-xl"
-              >
-                <div className="flex-shrink-0 w-8 h-8 bg-telkom-red text-white rounded-full flex items-center justify-center font-bold text-sm">
-                  {step.step}
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-800 dark:text-white mb-1">{step.title}</h3>
-                  <p className="text-gray-600 dark:text-gray-300 text-sm">{step.description}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.section>
+      case 'usage':
+        return (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-8"
+          >
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-8">Cara Penggunaan</h2>
+            <div className="space-y-6">
+              {steps.map((step, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 * index }}
+                  className="flex items-start gap-4 p-6 bg-white/50 dark:bg-gray-800/50 rounded-xl"
+                >
+                  <div className="flex-shrink-0 w-10 h-10 bg-telkom-red text-white rounded-full flex items-center justify-center font-bold">
+                    {step.step}
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-800 dark:text-white mb-2">{step.title}</h3>
+                    <p className="text-gray-600 dark:text-gray-300">{step.description}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        );
 
-        {/* Grade Scale */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="glass-card rounded-3xl p-8 mb-12"
-        >
-          <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-8 text-center">Skala Penilaian</h2>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-gray-200 dark:border-gray-700">
-                  <th className="text-left py-3 px-4 font-semibold text-gray-800 dark:text-white">Nilai</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-800 dark:text-white">Poin</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-800 dark:text-white">Persentase</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-800 dark:text-white">Keterangan</th>
-                </tr>
-              </thead>
-              <tbody>
-                {gradeScale.map((grade, index) => (
-                  <tr key={index} className="border-b border-gray-100 dark:border-gray-800">
-                    <td className="py-3 px-4">
-                      <span className="font-bold text-telkom-red">{grade.grade}</span>
-                    </td>
-                    <td className="py-3 px-4 text-gray-600 dark:text-gray-300">{grade.points}</td>
-                    <td className="py-3 px-4 text-gray-600 dark:text-gray-300">{grade.percentage}</td>
-                    <td className="py-3 px-4 text-gray-600 dark:text-gray-300">{grade.description}</td>
+      case 'grading':
+        return (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-8"
+          >
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-8">Skala Penilaian</h2>
+            <div className="overflow-x-auto">
+              <table className="w-full bg-white/50 dark:bg-gray-800/50 rounded-xl">
+                <thead>
+                  <tr className="border-b border-gray-200 dark:border-gray-700">
+                    <th className="text-left py-4 px-6 font-semibold text-gray-800 dark:text-white">Nilai</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-800 dark:text-white">Poin</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-800 dark:text-white">Persentase</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-800 dark:text-white">Keterangan</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </motion.section>
+                </thead>
+                <tbody>
+                  {gradeScale.map((grade, index) => (
+                    <tr key={index} className="border-b border-gray-100 dark:border-gray-800">
+                      <td className="py-4 px-6">
+                        <span className="font-bold text-telkom-red text-lg">{grade.grade}</span>
+                      </td>
+                      <td className="py-4 px-6 text-gray-600 dark:text-gray-300">{grade.points}</td>
+                      <td className="py-4 px-6 text-gray-600 dark:text-gray-300">{grade.percentage}</td>
+                      <td className="py-4 px-6 text-gray-600 dark:text-gray-300">{grade.description}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </motion.div>
+        );
 
-        {/* Predicates */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="glass-card rounded-3xl p-8 mb-12"
-        >
-          <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-8 text-center">Predikat Kelulusan</h2>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-gray-200 dark:border-gray-700">
-                  <th className="text-left py-3 px-4 font-semibold text-gray-800 dark:text-white">Predikat</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-800 dark:text-white">S1/D3</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-800 dark:text-white">S2/S3</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-800 dark:text-white">Keterangan</th>
-                </tr>
-              </thead>
-              <tbody>
-                {predicates.map((predicate, index) => (
-                  <tr key={index} className="border-b border-gray-100 dark:border-gray-800">
-                    <td className="py-3 px-4">
-                      <span className="font-bold text-telkom-red">{predicate.name}</span>
-                    </td>
-                    <td className="py-3 px-4 text-gray-600 dark:text-gray-300">{predicate.s1}</td>
-                    <td className="py-3 px-4 text-gray-600 dark:text-gray-300">{predicate.s2}</td>
-                    <td className="py-3 px-4 text-gray-600 dark:text-gray-300">{predicate.description}</td>
+      case 'predicates':
+        return (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-8"
+          >
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-8">Predikat Kelulusan</h2>
+            <div className="overflow-x-auto">
+              <table className="w-full bg-white/50 dark:bg-gray-800/50 rounded-xl">
+                <thead>
+                  <tr className="border-b border-gray-200 dark:border-gray-700">
+                    <th className="text-left py-4 px-6 font-semibold text-gray-800 dark:text-white">Predikat</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-800 dark:text-white">S1/D3</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-800 dark:text-white">S2/S3</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-800 dark:text-white">Keterangan</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </motion.section>
+                </thead>
+                <tbody>
+                  {predicates.map((predicate, index) => (
+                    <tr key={index} className="border-b border-gray-100 dark:border-gray-800">
+                      <td className="py-4 px-6">
+                        <span className="font-bold text-telkom-red">{predicate.name}</span>
+                      </td>
+                      <td className="py-4 px-6 text-gray-600 dark:text-gray-300">{predicate.s1}</td>
+                      <td className="py-4 px-6 text-gray-600 dark:text-gray-300">{predicate.s2}</td>
+                      <td className="py-4 px-6 text-gray-600 dark:text-gray-300">{predicate.description}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </motion.div>
+        );
 
-        {/* AI Features */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="glass-card rounded-3xl p-8 mb-12"
-        >
-          <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-8 text-center">Fitur AI Assistant</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <div className="flex items-center gap-3 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-xl">
-                <TrendingUp className="w-6 h-6 text-purple-500" />
-                <div>
-                  <h3 className="font-semibold text-gray-800 dark:text-white">Analisis Performa</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">Evaluasi mendalam terhadap prestasi akademik</p>
+      case 'ai-features':
+        return (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-8"
+          >
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-8">Fitur AI Assistant</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 p-6 bg-purple-50 dark:bg-purple-900/20 rounded-xl">
+                  <TrendingUp className="w-8 h-8 text-purple-500" />
+                  <div>
+                    <h3 className="font-semibold text-gray-800 dark:text-white mb-1">Analisis Performa</h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">Evaluasi mendalam terhadap prestasi akademik</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 p-6 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
+                  <Target className="w-8 h-8 text-blue-500" />
+                  <div>
+                    <h3 className="font-semibold text-gray-800 dark:text-white mb-1">Rekomendasi Target</h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">Saran pencapaian IPK dan predikat</p>
+                  </div>
                 </div>
               </div>
-              <div className="flex items-center gap-3 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
-                <Target className="w-6 h-6 text-blue-500" />
-                <div>
-                  <h3 className="font-semibold text-gray-800 dark:text-white">Rekomendasi Target</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">Saran pencapaian IPK dan predikat</p>
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 p-6 bg-green-50 dark:bg-green-900/20 rounded-xl">
+                  <Lightbulb className="w-8 h-8 text-green-500" />
+                  <div>
+                    <h3 className="font-semibold text-gray-800 dark:text-white mb-1">Strategi Belajar</h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">Tips dan metode belajar yang efektif</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 p-6 bg-orange-50 dark:bg-orange-900/20 rounded-xl">
+                  <Award className="w-8 h-8 text-orange-500" />
+                  <div>
+                    <h3 className="font-semibold text-gray-800 dark:text-white mb-1">Peningkatan Nilai</h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">Saran mata kuliah untuk diperbaiki</p>
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="space-y-4">
-              <div className="flex items-center gap-3 p-4 bg-green-50 dark:bg-green-900/20 rounded-xl">
-                <Lightbulb className="w-6 h-6 text-green-500" />
-                <div>
-                  <h3 className="font-semibold text-gray-800 dark:text-white">Strategi Belajar</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">Tips dan metode belajar yang efektif</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3 p-4 bg-orange-50 dark:bg-orange-900/20 rounded-xl">
-                <Award className="w-6 h-6 text-orange-500" />
-                <div>
-                  <h3 className="font-semibold text-gray-800 dark:text-white">Peningkatan Nilai</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">Saran mata kuliah untuk diperbaiki</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </motion.section>
+          </motion.div>
+        );
 
-        {/* Technical Info */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
-          className="glass-card rounded-3xl p-8"
-        >
-          <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-6 text-center">Informasi Teknis</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
-              <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Teknologi yang Digunakan</h3>
-              <ul className="space-y-2 text-gray-600 dark:text-gray-300">
-                <li>• React 18 dengan TypeScript</li>
-                <li>• Tailwind CSS untuk styling</li>
-                <li>• Framer Motion untuk animasi</li>
-                <li>• Recharts untuk visualisasi data</li>
-                <li>• Lucide React untuk ikon</li>
-                <li>• Vite sebagai build tool</li>
-              </ul>
+      case 'technical':
+        return (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-8"
+          >
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-8">Informasi Teknis</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="bg-white/50 dark:bg-gray-800/50 rounded-xl p-6">
+                <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Teknologi yang Digunakan</h3>
+                <ul className="space-y-3 text-gray-600 dark:text-gray-300">
+                  <li className="flex items-center gap-2">
+                    <ChevronRight className="w-4 h-4 text-telkom-red" />
+                    React 18 dengan TypeScript
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <ChevronRight className="w-4 h-4 text-telkom-red" />
+                    Tailwind CSS untuk styling
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <ChevronRight className="w-4 h-4 text-telkom-red" />
+                    Framer Motion untuk animasi
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <ChevronRight className="w-4 h-4 text-telkom-red" />
+                    Recharts untuk visualisasi data
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <ChevronRight className="w-4 h-4 text-telkom-red" />
+                    Lucide React untuk ikon
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <ChevronRight className="w-4 h-4 text-telkom-red" />
+                    Vite sebagai build tool
+                  </li>
+                </ul>
+              </div>
+              <div className="bg-white/50 dark:bg-gray-800/50 rounded-xl p-6">
+                <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Fitur Browser</h3>
+                <ul className="space-y-3 text-gray-600 dark:text-gray-300">
+                  <li className="flex items-center gap-2">
+                    <ChevronRight className="w-4 h-4 text-telkom-red" />
+                    Responsive design untuk semua perangkat
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <ChevronRight className="w-4 h-4 text-telkom-red" />
+                    Dark mode support
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <ChevronRight className="w-4 h-4 text-telkom-red" />
+                    Local storage untuk data persistence
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <ChevronRight className="w-4 h-4 text-telkom-red" />
+                    Progressive Web App (PWA) ready
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <ChevronRight className="w-4 h-4 text-telkom-red" />
+                    Export/Import data CSV, Excel, PDF
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <ChevronRight className="w-4 h-4 text-telkom-red" />
+                    Real-time calculation
+                  </li>
+                </ul>
+              </div>
             </div>
-            <div>
-              <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Fitur Browser</h3>
-              <ul className="space-y-2 text-gray-600 dark:text-gray-300">
-                <li>• Responsive design untuk semua perangkat</li>
-                <li>• Dark mode support</li>
-                <li>• Local storage untuk data persistence</li>
-                <li>• Progressive Web App (PWA) ready</li>
-                <li>• Export/Import data CSV, Excel, PDF</li>
-                <li>• Real-time calculation</li>
-              </ul>
+            
+            <div className="bg-telkom-red/10 rounded-xl p-8 text-center">
+              <h3 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">Dikembangkan dengan ❤️</h3>
+              <p className="text-gray-600 dark:text-gray-300 text-lg">
+                © 2025 Rachdian - Untuk kemajuan pendidikan di Telkom University
+              </p>
             </div>
+          </motion.div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      <div className="flex h-screen">
+        {/* Sidebar */}
+        <div className={`fixed inset-y-0 left-0 z-50 w-80 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-r border-gray-200 dark:border-gray-700 transform transition-transform duration-300 ease-in-out ${
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        } lg:translate-x-0 lg:static lg:inset-0`}>
+          <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+            <div className="flex items-center gap-3">
+              <BookOpen className="w-6 h-6 text-telkom-red" />
+              <h1 className="text-xl font-bold text-gray-800 dark:text-white">Dokumentasi</h1>
+            </div>
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className="lg:hidden p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
           
-          <div className="mt-8 p-6 bg-telkom-red/10 rounded-xl text-center">
-            <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">Dikembangkan dengan ❤️</h3>
-            <p className="text-gray-600 dark:text-gray-300">
-              © 2025 Rachdian - Untuk kemajuan pendidikan di Telkom University
-            </p>
-          </div>
-        </motion.section>
+          <nav className="p-4">
+            <ul className="space-y-2">
+              {sections.map((section) => {
+                const Icon = section.icon;
+                return (
+                  <li key={section.id}>
+                    <button
+                      onClick={() => {
+                        setActiveSection(section.id);
+                        setSidebarOpen(false);
+                      }}
+                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200 ${
+                        activeSection === section.id
+                          ? 'bg-telkom-red text-white shadow-lg'
+                          : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                      }`}
+                    >
+                      <Icon className="w-5 h-5" />
+                      <span className="font-medium">{section.title}</span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+        </div>
+
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {/* Header */}
+          <header className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200 dark:border-gray-700 p-4 lg:p-6">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="lg:hidden p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              >
+                <Menu className="w-6 h-6" />
+              </button>
+              <div>
+                <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-telkom-red via-telkom-brightRed to-telkom-red bg-clip-text text-transparent">
+                  Dokumentasi Aplikasi
+                </h1>
+                <p className="text-gray-600 dark:text-gray-400 mt-1">
+                  Panduan lengkap penggunaan Kalkulator Akademik Terpadu
+                </p>
+              </div>
+            </div>
+          </header>
+
+          {/* Content */}
+          <main className="flex-1 overflow-y-auto p-4 lg:p-8">
+            <div className="max-w-4xl mx-auto">
+              <AnimatePresence mode="wait">
+                {renderContent()}
+              </AnimatePresence>
+            </div>
+          </main>
+        </div>
       </div>
+
+      {/* Overlay for mobile */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
     </div>
   );
 };
