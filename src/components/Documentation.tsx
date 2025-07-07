@@ -15,7 +15,8 @@ import {
   TrendingUp,
   Menu,
   X,
-  ChevronRight
+  ChevronRight,
+  Home
 } from 'lucide-react';
 
 const Documentation: React.FC = () => {
@@ -412,7 +413,7 @@ const Documentation: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <div className="flex h-screen">
         {/* Sidebar */}
-        <div className={`fixed inset-y-0 left-0 z-50 w-80 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-r border-gray-200 dark:border-gray-700 transform transition-transform duration-300 ease-in-out ${
+        <div className={`fixed inset-y-0 left-0 z-50 w-80 bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border-r border-gray-200 dark:border-gray-700 transform transition-transform duration-300 ease-in-out ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0 lg:static lg:inset-0`}>
           <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
@@ -458,7 +459,7 @@ const Documentation: React.FC = () => {
         {/* Main Content */}
         <div className="flex-1 flex flex-col overflow-hidden">
           {/* Header */}
-          <header className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200 dark:border-gray-700 p-4 lg:p-6">
+          <header className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border-b border-gray-200 dark:border-gray-700 p-4 lg:p-6">
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setSidebarOpen(true)}

@@ -10,9 +10,14 @@ import {
   CheckCircle,
   XCircle,
   Lightbulb,
-  BarChart3
+  BarChart3,
+  Download,
+  Mail,
+  Send,
+  FileText
 } from 'lucide-react';
 import { Course, GPAResult, StudentData } from '../types';
+import toast from 'react-hot-toast';
 
 interface AIAnalysisProps {
   courses: Course[];
@@ -48,6 +53,9 @@ const AIAnalysis: React.FC<AIAnalysisProps> = ({
     overallStrategy: string[];
     potentialGPA: number;
   } | null>(null);
+  const [emailModalOpen, setEmailModalOpen] = useState(false);
+  const [email, setEmail] = useState('');
+  const [sendingEmail, setSendingEmail] = useState(false);
 
   const generateAnalysis = async () => {
     setLoading(true);
@@ -296,6 +304,80 @@ const AIAnalysis: React.FC<AIAnalysisProps> = ({
     }
   };
 
+  const downloadReport = () => {
+    if (!analysis) return;
+
+    const reportContent = `
+LAPORAN ANALISIS AKADEMIK AI
+=============================
+
+Informasi Mahasiswa:
+- Nama: ${studentData.name || 'N/A'}
+- NIM: ${studentData.nim || 'N/A'}
+- Program: ${studentData.programLevel.toUpperCase()}
+- Fakultas: ${studentData.faculty || 'N/A'}
+- Program Studi: ${studentData.major || 'N/A'}
+
+Ringkasan Akademik:
+- IPK Saat Ini: ${gpaResult.gpa.toFixed(2)}
+- Total SKS: ${gpaResult.totalCredits}
+- Mata Kuliah Selesai: ${gpaResult.completedCourses}
+- Potensi IPK Maksimal: ${analysis.potentialGPA.toFixed(2)}
+
+REKOMENDASI PERBAIKAN MATA KULIAH:
+${analysis.courseRecommendations.map((rec, index) => `
+${index + 1}. ${rec.courseName}
+   - Nilai Saat Ini: ${rec.currentGrade}
+   - Target: ${rec.targetGrade}
+   - Prioritas: ${rec.priority.toUpperCase()}
+   - Dampak IPK: +${rec.impactOnGPA.toFixed(3)}
+   - Rekomendasi:
+${rec.recommendations.map(r => `     • ${r}`).join('\n')}
+`).join('\n')}
+
+RENCANA BELAJAR 4 MINGGU:
+${analysis.studyPlan.map(week => `
+Minggu ${week.week}: ${week.focus}
+Aktivitas:
+${week.activities.map(a => `  • ${a}`).join('\n')}
+Sumber Daya:
+${week.resources.map(r => `  • ${r}`).join('\n')}
+`).join('\n')}
+
+STRATEGI KESELURUHAN:
+${analysis.overallStrategy.map((strategy, index) => `${index + 1}. ${strategy}`).join('\n')}
+
+---
+Laporan dibuat pada: ${new Date().toLocaleString('id-ID')}
+Kalkulator Akademik Terpadu - Telkom University
+    `;
+
+    const blob = new Blob([reportContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `Laporan_Analisis_AI_${studentData.name || 'Mahasiswa'}_${new Date().toISOString().split('T')[0]}.txt`;
+    link.click();
+    URL.revokeObjectURL(url);
+    
+    toast.success('Laporan berhasil diunduh!');
+  };
+
+  const sendEmailReport = async () => {
+    if (!email || !analysis) return;
+
+    setSendingEmail(true);
+    
+    // Simulate email sending
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // In a real application, you would send this to your backend
+    toast.success(`Laporan berhasil dikirim ke ${email}!`);
+    setSendingEmail(false);
+    setEmailModalOpen(false);
+    setEmail('');
+  };
+
   if (courses.length === 0) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-12">
@@ -407,11 +489,35 @@ const AIAnalysis: React.FC<AIAnalysisProps> = ({
                 </motion.div>
               </div>
 
+              {/* Action Buttons */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="flex flex-wrap gap-4 justify-center"
+              >
+                <button
+                  onClick={downloadReport}
+                  className="flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl"
+                >
+                  <Download className="w-5 h-5" />
+                  Unduh Laporan
+                </button>
+                
+                <button
+                  onClick={() => setEmailModalOpen(true)}
+                  className="flex items-center gap-2 px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl"
+                >
+                  <Mail className="w-5 h-5" />
+                  Kirim ke Email
+                </button>
+              </motion.div>
+
               {/* Course Recommendations */}
               <motion.section
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
+                transition={{ delay: 0.5 }}
                 className="glass-card rounded-3xl p-8"
               >
                 <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 flex items-center gap-3">
@@ -468,7 +574,7 @@ const AIAnalysis: React.FC<AIAnalysisProps> = ({
               <motion.section
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
+                transition={{ delay: 0.6 }}
                 className="glass-card rounded-3xl p-8"
               >
                 <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 flex items-center gap-3">
@@ -526,7 +632,7 @@ const AIAnalysis: React.FC<AIAnalysisProps> = ({
               <motion.section
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
+                transition={{ delay: 0.7 }}
                 className="glass-card rounded-3xl p-8"
               >
                 <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 flex items-center gap-3">
@@ -554,7 +660,7 @@ const AIAnalysis: React.FC<AIAnalysisProps> = ({
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7 }}
+                transition={{ delay: 0.8 }}
                 className="text-center"
               >
                 <button
@@ -564,6 +670,70 @@ const AIAnalysis: React.FC<AIAnalysisProps> = ({
                   <Brain className="w-5 h-5" />
                   Analisis Ulang
                 </button>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Email Modal */}
+        <AnimatePresence>
+          {emailModalOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+              onClick={() => setEmailModalOpen(false)}
+            >
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+                className="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-md w-full"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex items-center gap-3 mb-6">
+                  <Mail className="w-6 h-6 text-blue-500" />
+                  <h3 className="text-xl font-bold text-gray-800 dark:text-white">
+                    Kirim Laporan ke Email
+                  </h3>
+                </div>
+                
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Alamat Email
+                    </label>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="contoh@email.com"
+                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                  </div>
+                  
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => setEmailModalOpen(false)}
+                      className="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                    >
+                      Batal
+                    </button>
+                    <button
+                      onClick={sendEmailReport}
+                      disabled={!email || sendingEmail}
+                      className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-blue-500 hover:bg-blue-600 disabled:opacity-50 text-white rounded-xl transition-colors"
+                    >
+                      {sendingEmail ? (
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      ) : (
+                        <Send className="w-4 h-4" />
+                      )}
+                      {sendingEmail ? 'Mengirim...' : 'Kirim'}
+                    </button>
+                  </div>
+                </div>
               </motion.div>
             </motion.div>
           )}

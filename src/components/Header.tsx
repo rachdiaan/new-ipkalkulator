@@ -11,29 +11,32 @@ const Header: React.FC = () => {
         animate={{ scale: 1 }}
         transition={{ type: "spring", stiffness: 200, damping: 15 }}
       >
-        {/* Logo */}
-        <motion.img 
-          src="https://smb.telkomuniversity.ac.id/wp-content/uploads/2023/03/Logo-Utama-Telkom-University.png" 
-          alt="Logo Telkom University" 
-          className="h-20 w-auto drop-shadow-2xl dark:hidden"
+        {/* Logo Container with consistent sizing */}
+        <motion.div
+          className="relative w-20 h-20 flex items-center justify-center"
           whileHover={{ scale: 1.05, rotate: 2 }}
           transition={{ type: "spring", stiffness: 300 }}
-          onError={(e) => {
-            e.currentTarget.style.display = 'none';
-          }}
-        />
-        
-        {/* Dark Mode Logo */}
-        <motion.img 
-          src="https://b1983693.smushcdn.com/1983693/wp-content/uploads/2024/04/Logo-Telkom-University.png?lossy=2&strip=1&webp=1" 
-          alt="Logo Telkom University" 
-          className="h-20 w-auto drop-shadow-2xl hidden dark:block"
-          whileHover={{ scale: 1.05, rotate: 2 }}
-          transition={{ type: "spring", stiffness: 300 }}
-          onError={(e) => {
-            e.currentTarget.style.display = 'none';
-          }}
-        />
+        >
+          {/* Light Mode Logo */}
+          <img 
+            src="https://smb.telkomuniversity.ac.id/wp-content/uploads/2023/03/Logo-Utama-Telkom-University.png" 
+            alt="Logo Telkom University" 
+            className="w-full h-full object-contain drop-shadow-2xl dark:hidden"
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+            }}
+          />
+          
+          {/* Dark Mode Logo */}
+          <img 
+            src="https://b1983693.smushcdn.com/1983693/wp-content/uploads/2024/04/Logo-Telkom-University.png?lossy=2&strip=1&webp=1" 
+            alt="Logo Telkom University" 
+            className="w-full h-full object-contain drop-shadow-2xl hidden dark:block"
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+            }}
+          />
+        </motion.div>
         
         {/* Title and Calculator Icon */}
         <div className="text-center md:text-left flex flex-col md:flex-row items-center gap-4">
