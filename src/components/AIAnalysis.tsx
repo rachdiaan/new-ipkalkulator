@@ -13,11 +13,11 @@ import {
   BarChart3,
   Download,
   Mail,
-  Send,
-  FileText
+  Send
 } from 'lucide-react';
 import { Course, GPAResult, StudentData } from '../types';
 import toast from 'react-hot-toast';
+import jsPDF from 'jspdf';
 
 interface AIAnalysisProps {
   courses: Course[];
@@ -307,58 +307,213 @@ const AIAnalysis: React.FC<AIAnalysisProps> = ({
   const downloadReport = () => {
     if (!analysis) return;
 
-    const reportContent = `
-LAPORAN ANALISIS AKADEMIK AI
-=============================
-
-Informasi Mahasiswa:
-- Nama: ${studentData.name || 'N/A'}
-- NIM: ${studentData.nim || 'N/A'}
-- Program: ${studentData.programLevel.toUpperCase()}
-- Fakultas: ${studentData.faculty || 'N/A'}
-- Program Studi: ${studentData.major || 'N/A'}
-
-Ringkasan Akademik:
-- IPK Saat Ini: ${gpaResult.gpa.toFixed(2)}
-- Total SKS: ${gpaResult.totalCredits}
-- Mata Kuliah Selesai: ${gpaResult.completedCourses}
-- Potensi IPK Maksimal: ${analysis.potentialGPA.toFixed(2)}
-
-REKOMENDASI PERBAIKAN MATA KULIAH:
-${analysis.courseRecommendations.map((rec, index) => `
-${index + 1}. ${rec.courseName}
-   - Nilai Saat Ini: ${rec.currentGrade}
-   - Target: ${rec.targetGrade}
-   - Prioritas: ${rec.priority.toUpperCase()}
-   - Dampak IPK: +${rec.impactOnGPA.toFixed(3)}
-   - Rekomendasi:
-${rec.recommendations.map(r => `     • ${r}`).join('\n')}
-`).join('\n')}
-
-RENCANA BELAJAR 4 MINGGU:
-${analysis.studyPlan.map(week => `
-Minggu ${week.week}: ${week.focus}
-Aktivitas:
-${week.activities.map(a => `  • ${a}`).join('\n')}
-Sumber Daya:
-${week.resources.map(r => `  • ${r}`).join('\n')}
-`).join('\n')}
-
-STRATEGI KESELURUHAN:
-${analysis.overallStrategy.map((strategy, index) => `${index + 1}. ${strategy}`).join('\n')}
-
----
-Laporan dibuat pada: ${new Date().toLocaleString('id-ID')}
-Kalkulator Akademik Terpadu - Telkom University
-    `;
-
-    const blob = new Blob([reportContent], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `Laporan_Analisis_AI_${studentData.name || 'Mahasiswa'}_${new Date().toISOString().split('T')[0]}.txt`;
-    link.click();
-    URL.revokeObjectURL(url);
+    const doc = new jsPDF();
+    
+    // Set colors
+    const primaryColor = [182, 37, 42]; // Telkom Red
+    const secondaryColor = [237, 30, 40]; // Telkom Bright Red
+    const textColor = [51, 51, 51];
+    const lightGray = [128, 128, 128];
+    
+    // Header with gradient effect
+    doc.setFillColor(...primaryColor);
+    doc.rect(0, 0, 210, 40, 'F');
+    
+    doc.setFillColor(...secondaryColor);
+    doc.rect(0, 35, 210, 5, 'F');
+    
+    // Title
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(24);
+    doc.setFont('helvetica', 'bold');
+    doc.text('LAPORAN ANALISIS AKADEMIK AI', 105, 20, { align: 'center' });
+    
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Telkom University - Kalkulator Akademik Terpadu', 105, 30, { align: 'center' });
+    
+    let yPos = 55;
+    
+    // Student Information Section
+    doc.setTextColor(...textColor);
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.text('INFORMASI MAHASISWA', 20, yPos);
+    
+    // Underline
+    doc.setDrawColor(...primaryColor);
+    doc.setLineWidth(0.5);
+    doc.line(20, yPos + 2, 80, yPos + 2);
+    
+    yPos += 15;
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'normal');
+    
+    const studentInfo = [
+      `Nama: ${studentData.name || 'N/A'}`,
+      `NIM: ${studentData.nim || 'N/A'}`,
+      `Program: ${studentData.programLevel.toUpperCase()}`,
+      `Fakultas: ${studentData.faculty || 'N/A'}`,
+      `Program Studi: ${studentData.major || 'N/A'}`
+    ];
+    
+    studentInfo.forEach(info => {
+      doc.text(info, 25, yPos);
+      yPos += 8;
+    });
+    
+    yPos += 10;
+    
+    // Academic Summary Section
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.text('RINGKASAN AKADEMIK', 20, yPos);
+    doc.line(20, yPos + 2, 80, yPos + 2);
+    
+    yPos += 15;
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'normal');
+    
+    const academicSummary = [
+      `IPK Saat Ini: ${gpaResult.gpa.toFixed(2)}`,
+      `Total SKS: ${gpaResult.totalCredits}`,
+      `Mata Kuliah Selesai: ${gpaResult.completedCourses}`,
+      `Potensi IPK Maksimal: ${analysis.potentialGPA.toFixed(2)}`
+    ];
+    
+    academicSummary.forEach(summary => {
+      doc.text(summary, 25, yPos);
+      yPos += 8;
+    });
+    
+    yPos += 15;
+    
+    // Course Recommendations Section
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.text('REKOMENDASI PERBAIKAN MATA KULIAH', 20, yPos);
+    doc.line(20, yPos + 2, 120, yPos + 2);
+    
+    yPos += 15;
+    
+    analysis.courseRecommendations.forEach((rec, index) => {
+      if (yPos > 250) {
+        doc.addPage();
+        yPos = 30;
+      }
+      
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(...primaryColor);
+      doc.text(`${index + 1}. ${rec.courseName}`, 25, yPos);
+      
+      yPos += 10;
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(...textColor);
+      
+      doc.text(`Nilai Saat Ini: ${rec.currentGrade} | Target: ${rec.targetGrade} | Prioritas: ${rec.priority.toUpperCase()}`, 30, yPos);
+      yPos += 8;
+      doc.text(`Dampak IPK: +${rec.impactOnGPA.toFixed(3)}`, 30, yPos);
+      yPos += 10;
+      
+      doc.setTextColor(...lightGray);
+      doc.text('Rekomendasi:', 30, yPos);
+      yPos += 8;
+      
+      rec.recommendations.slice(0, 3).forEach(recommendation => {
+        if (yPos > 270) {
+          doc.addPage();
+          yPos = 30;
+        }
+        const lines = doc.splitTextToSize(`• ${recommendation}`, 150);
+        doc.text(lines, 35, yPos);
+        yPos += lines.length * 6;
+      });
+      
+      yPos += 10;
+    });
+    
+    // Study Plan Section
+    if (yPos > 200) {
+      doc.addPage();
+      yPos = 30;
+    }
+    
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(...textColor);
+    doc.text('RENCANA BELAJAR 4 MINGGU', 20, yPos);
+    doc.line(20, yPos + 2, 100, yPos + 2);
+    
+    yPos += 15;
+    
+    analysis.studyPlan.forEach(week => {
+      if (yPos > 240) {
+        doc.addPage();
+        yPos = 30;
+      }
+      
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(...primaryColor);
+      doc.text(`Minggu ${week.week}: ${week.focus}`, 25, yPos);
+      
+      yPos += 10;
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(...textColor);
+      
+      doc.text('Aktivitas:', 30, yPos);
+      yPos += 8;
+      
+      week.activities.slice(0, 2).forEach(activity => {
+        const lines = doc.splitTextToSize(`• ${activity}`, 140);
+        doc.text(lines, 35, yPos);
+        yPos += lines.length * 6;
+      });
+      
+      yPos += 5;
+    });
+    
+    // Overall Strategy Section
+    if (yPos > 200) {
+      doc.addPage();
+      yPos = 30;
+    }
+    
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(...textColor);
+    doc.text('STRATEGI KESELURUHAN', 20, yPos);
+    doc.line(20, yPos + 2, 90, yPos + 2);
+    
+    yPos += 15;
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    
+    analysis.overallStrategy.slice(0, 5).forEach((strategy, index) => {
+      if (yPos > 270) {
+        doc.addPage();
+        yPos = 30;
+      }
+      const lines = doc.splitTextToSize(`${index + 1}. ${strategy}`, 160);
+      doc.text(lines, 25, yPos);
+      yPos += lines.length * 8;
+    });
+    
+    // Footer
+    const pageCount = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.setTextColor(...lightGray);
+      doc.text(`Laporan dibuat pada: ${new Date().toLocaleString('id-ID')}`, 20, 285);
+      doc.text(`Halaman ${i} dari ${pageCount}`, 170, 285);
+    }
+    
+    // Save the PDF
+    doc.save(`Laporan_Analisis_AI_${studentData.name || 'Mahasiswa'}_${new Date().toISOString().split('T')[0]}.pdf`);
     
     toast.success('Laporan berhasil diunduh!');
   };
