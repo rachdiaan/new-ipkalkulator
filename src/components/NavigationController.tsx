@@ -55,7 +55,7 @@ const NavigationController: React.FC<NavigationControllerProps> = ({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 100, scale: 0.8 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed bottom-20 left-1/2 transform -translate-x-1/2 z-40"
+            className="fixed bottom-50 left-1/2 transform -translate-x-1/2 z-40"
           >
             <div className="bg-white/25 dark:bg-gray-800/25 backdrop-blur-xl border border-white/30 dark:border-gray-700/30 rounded-3xl p-4 shadow-2xl">
               {/* Desktop Layout */}
