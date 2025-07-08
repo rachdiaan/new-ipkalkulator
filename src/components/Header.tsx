@@ -11,9 +11,9 @@ const Header: React.FC = () => {
         animate={{ scale: 1 }}
         transition={{ type: "spring", stiffness: 200, damping: 15 }}
       >
-        {/* Logo Container with larger sizing */}
+        {/* Logo Container with consistent sizing */}
         <motion.div
-          className="relative w-28 h-28 flex items-center justify-center"
+          className="relative w-32 h-32 flex items-center justify-center"
           whileHover={{ scale: 1.05, rotate: 2 }}
           transition={{ type: "spring", stiffness: 300 }}
         >

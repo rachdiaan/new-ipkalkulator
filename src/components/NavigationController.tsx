@@ -36,10 +36,10 @@ const NavigationController: React.FC<NavigationControllerProps> = ({
 
   return (
     <>
-      {/* Toggle Button - Bottom Right */}
+      {/* Toggle Button - Bottom Center */}
       <motion.button
         onClick={() => setIsVisible(!isVisible)}
-        className="fixed bottom-6 right-6 z-50 p-4 bg-white/20 dark:bg-gray-800/20 backdrop-blur-xl border border-white/30 dark:border-gray-700/30 rounded-full shadow-2xl text-gray-600 dark:text-gray-400 hover:text-telkom-red dark:hover:text-telkom-brightRed transition-all duration-300"
+        className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 p-4 bg-white/25 dark:bg-gray-800/25 backdrop-blur-xl border border-white/30 dark:border-gray-700/30 rounded-full shadow-2xl text-gray-600 dark:text-gray-400 hover:text-telkom-red dark:hover:text-telkom-brightRed transition-all duration-300"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         initial={{ opacity: 0, scale: 0 }}
@@ -53,18 +53,19 @@ const NavigationController: React.FC<NavigationControllerProps> = ({
         )}
       </motion.button>
 
-      {/* Desktop Navigation Panel - Right Side */}
+      {/* Navigation Panel - Bottom Center */}
       <AnimatePresence>
         {isVisible && (
           <motion.div
-            initial={{ opacity: 0, x: 100, scale: 0.8 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: 100, scale: 0.8 }}
+            initial={{ opacity: 0, y: 100, scale: 0.8 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 100, scale: 0.8 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed bottom-20 right-6 z-40 hidden sm:block"
+            className="fixed bottom-20 left-1/2 transform -translate-x-1/2 z-40"
           >
             <div className="bg-white/25 dark:bg-gray-800/25 backdrop-blur-xl border border-white/30 dark:border-gray-700/30 rounded-3xl p-4 shadow-2xl">
-              <div className="flex flex-col gap-3">
+              {/* Desktop Layout */}
+              <div className="hidden sm:flex items-center gap-3">
                 {navItems.map((item, index) => {
                   const Icon = item.icon;
                   const isActive = currentPage === item.id;
@@ -78,7 +79,7 @@ const NavigationController: React.FC<NavigationControllerProps> = ({
                       initial={{ opacity: 0, x: 50 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.1 }}
-                      className={`relative flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-300 min-w-[220px] group ${
+                      className={`relative flex items-center gap-4 px-6 py-4 rounded-2xl transition-all duration-300 min-w-[200px] group ${
                         isActive
                           ? 'bg-telkom-red text-white shadow-lg'
                           : 'text-gray-700 dark:text-gray-300 hover:bg-white/50 dark:hover:bg-gray-800/50'
@@ -104,24 +105,10 @@ const NavigationController: React.FC<NavigationControllerProps> = ({
                   );
                 })}
               </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
-      {/* Mobile Navigation - Bottom Center */}
-      <AnimatePresence>
-        {isVisible && (
-          <motion.div
-            initial={{ opacity: 0, y: 100 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 100 }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed bottom-20 left-1/2 transform -translate-x-1/2 z-40 sm:hidden"
-          >
-            <div className="bg-white/25 dark:bg-gray-800/25 backdrop-blur-xl border border-white/30 dark:border-gray-700/30 rounded-2xl p-3 shadow-2xl">
-              <div className="flex items-center gap-2">
-                {navItems.map((item) => {
+              {/* Mobile Layout */}
+              <div className="flex sm:hidden items-center gap-2">
+                {navItems.map((item, index) => {
                   const Icon = item.icon;
                   const isActive = currentPage === item.id;
                   
@@ -131,7 +118,10 @@ const NavigationController: React.FC<NavigationControllerProps> = ({
                       onClick={() => onPageChange(item.id)}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className={`relative flex flex-col items-center gap-1 px-4 py-3 rounded-xl transition-all duration-300 ${
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      className={`relative flex flex-col items-center gap-1 px-4 py-3 rounded-xl transition-all duration-300 min-w-[80px] ${
                         isActive
                           ? 'bg-telkom-red text-white shadow-lg'
                           : 'text-gray-600 dark:text-gray-400 hover:bg-white/50 dark:hover:bg-gray-800/50'

@@ -22,6 +22,7 @@ import {
 
 const Documentation: React.FC = () => {
   const [activeSection, setActiveSection] = useState('overview');
+  const [navVisible, setNavVisible] = useState(true);
 
   const sections = [
     { id: 'overview', title: 'Tentang Aplikasi', icon: BookOpen },
@@ -127,6 +128,25 @@ const Documentation: React.FC = () => {
     { name: 'Memuaskan', s1: '2.76 - 3.00', s2: '3.26 - 3.50', description: 'Prestasi akademik cukup baik', icon: '🥉', color: 'from-green-400 to-green-600' }
   ];
 
+  // Auto-hide navigation after 3 seconds of inactivity
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setNavVisible(false);
+    }, 3000);
+
+    const handleMouseMove = () => {
+      setNavVisible(true);
+      clearTimeout(timer);
+      setTimeout(() => setNavVisible(false), 3000);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
+
   const renderContent = () => {
     switch (activeSection) {
       case 'overview':
@@ -223,7 +243,7 @@ const Documentation: React.FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 * index }}
                   whileHover={{ scale: 1.02, y: -5 }}
-                  className="group p-8 bg-white/50 dark:bg-gray-800/50 rounded-3xl border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-all duration-300"
+                  className="group p-8 bg-white/50 dark:bg-gray-800/50 rounded-3xl border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-all duration-300 backdrop-blur-xl"
                 >
                   <div className="flex items-start gap-6">
                     <div className={`p-4 bg-gradient-to-br ${feature.color} rounded-2xl shadow-lg group-hover:scale-110 transition-transform duration-300`}>
@@ -259,7 +279,7 @@ const Documentation: React.FC = () => {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.1 * index }}
-                  className="flex items-start gap-6 p-8 bg-white/50 dark:bg-gray-800/50 rounded-3xl border border-gray-200 dark:border-gray-700"
+                  className="flex items-start gap-6 p-8 bg-white/50 dark:bg-gray-800/50 rounded-3xl border border-gray-200 dark:border-gray-700 backdrop-blur-xl"
                 >
                   <div className={`flex-shrink-0 w-16 h-16 ${step.color} text-white rounded-2xl flex items-center justify-center font-bold text-xl shadow-lg`}>
                     {step.step}
@@ -297,7 +317,7 @@ const Documentation: React.FC = () => {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.1 * index }}
                   whileHover={{ scale: 1.05, y: -5 }}
-                  className="text-center p-6 bg-white/50 dark:bg-gray-800/50 rounded-3xl border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300"
+                  className="text-center p-6 bg-white/50 dark:bg-gray-800/50 rounded-3xl border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300 backdrop-blur-xl"
                 >
                   <div className={`w-16 h-16 ${grade.color} text-white rounded-2xl flex items-center justify-center font-bold text-2xl mx-auto mb-4 shadow-lg`}>
                     {grade.grade}
@@ -333,7 +353,7 @@ const Documentation: React.FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 * index }}
                   whileHover={{ scale: 1.02, y: -5 }}
-                  className="p-8 bg-white/50 dark:bg-gray-800/50 rounded-3xl border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300"
+                  className="p-8 bg-white/50 dark:bg-gray-800/50 rounded-3xl border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300 backdrop-blur-xl"
                 >
                   <div className="flex items-start gap-6">
                     <div className={`p-4 bg-gradient-to-br ${predicate.color} rounded-2xl shadow-lg text-2xl`}>
@@ -375,7 +395,7 @@ const Documentation: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <motion.div
                 whileHover={{ scale: 1.02, y: -5 }}
-                className="p-8 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-3xl border border-purple-200 dark:border-purple-700/30"
+                className="p-8 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-3xl border border-purple-200 dark:border-purple-700/30 backdrop-blur-xl"
               >
                 <div className="flex items-center gap-4 mb-6">
                   <div className="p-3 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg">
@@ -390,7 +410,7 @@ const Documentation: React.FC = () => {
 
               <motion.div
                 whileHover={{ scale: 1.02, y: -5 }}
-                className="p-8 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-3xl border border-blue-200 dark:border-blue-700/30"
+                className="p-8 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-3xl border border-blue-200 dark:border-blue-700/30 backdrop-blur-xl"
               >
                 <div className="flex items-center gap-4 mb-6">
                   <div className="p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg">
@@ -405,7 +425,7 @@ const Documentation: React.FC = () => {
 
               <motion.div
                 whileHover={{ scale: 1.02, y: -5 }}
-                className="p-8 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-3xl border border-green-200 dark:border-green-700/30"
+                className="p-8 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-3xl border border-green-200 dark:border-green-700/30 backdrop-blur-xl"
               >
                 <div className="flex items-center gap-4 mb-6">
                   <div className="p-3 bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg">
@@ -420,7 +440,7 @@ const Documentation: React.FC = () => {
 
               <motion.div
                 whileHover={{ scale: 1.02, y: -5 }}
-                className="p-8 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 rounded-3xl border border-orange-200 dark:border-orange-700/30"
+                className="p-8 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 rounded-3xl border border-orange-200 dark:border-orange-700/30 backdrop-blur-xl"
               >
                 <div className="flex items-center gap-4 mb-6">
                   <div className="p-3 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl shadow-lg">
@@ -451,7 +471,7 @@ const Documentation: React.FC = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <motion.div
                 whileHover={{ scale: 1.02, y: -5 }}
-                className="p-8 bg-white/50 dark:bg-gray-800/50 rounded-3xl border border-gray-200 dark:border-gray-700"
+                className="p-8 bg-white/50 dark:bg-gray-800/50 rounded-3xl border border-gray-200 dark:border-gray-700 backdrop-blur-xl"
               >
                 <div className="flex items-center gap-4 mb-6">
                   <div className="p-3 bg-gradient-to-br from-telkom-red to-telkom-brightRed rounded-xl shadow-lg">
@@ -489,7 +509,7 @@ const Documentation: React.FC = () => {
 
               <motion.div
                 whileHover={{ scale: 1.02, y: -5 }}
-                className="p-8 bg-white/50 dark:bg-gray-800/50 rounded-3xl border border-gray-200 dark:border-gray-700"
+                className="p-8 bg-white/50 dark:bg-gray-800/50 rounded-3xl border border-gray-200 dark:border-gray-700 backdrop-blur-xl"
               >
                 <div className="flex items-center gap-4 mb-6">
                   <div className="p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg">
@@ -528,7 +548,7 @@ const Documentation: React.FC = () => {
             
             <motion.div
               whileHover={{ scale: 1.02, y: -5 }}
-              className="p-12 bg-gradient-to-br from-telkom-red/10 to-telkom-brightRed/10 rounded-3xl text-center border border-telkom-red/20"
+              className="p-12 bg-gradient-to-br from-telkom-red/10 to-telkom-brightRed/10 rounded-3xl text-center border border-telkom-red/20 backdrop-blur-xl"
             >
               <div className="flex items-center justify-center gap-4 mb-6">
                 <div className="p-4 bg-gradient-to-br from-telkom-red to-telkom-brightRed rounded-2xl shadow-lg">
@@ -550,34 +570,41 @@ const Documentation: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      {/* Floating Navigation */}
-      <motion.nav
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50"
-      >
-        <div className="bg-white/25 dark:bg-gray-800/25 backdrop-blur-xl border border-white/30 dark:border-gray-700/30 rounded-2xl p-2 shadow-2xl">
-          <div className="flex items-center gap-2 overflow-x-auto">
-            {sections.map((section) => {
-              const Icon = section.icon;
-              return (
-                <button
-                  key={section.id}
-                  onClick={() => setActiveSection(section.id)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 whitespace-nowrap ${
-                    activeSection === section.id
-                      ? 'bg-telkom-red text-white shadow-lg'
-                      : 'text-gray-600 dark:text-gray-400 hover:bg-white/50 dark:hover:bg-gray-800/50'
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  <span className="hidden sm:inline">{section.title}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </motion.nav>
+      {/* Auto-hide Navigation - Centered */}
+      <AnimatePresence>
+        {navVisible && (
+          <motion.nav
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50"
+          >
+            <div className="bg-white/25 dark:bg-gray-800/25 backdrop-blur-xl border border-white/30 dark:border-gray-700/30 rounded-2xl p-2 shadow-2xl">
+              <div className="flex items-center gap-2 overflow-x-auto">
+                {sections.map((section) => {
+                  const Icon = section.icon;
+                  return (
+                    <motion.button
+                      key={section.id}
+                      onClick={() => setActiveSection(section.id)}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className={`flex items-center justify-center p-3 rounded-xl transition-all duration-200 ${
+                        activeSection === section.id
+                          ? 'bg-telkom-red text-white shadow-lg'
+                          : 'text-gray-600 dark:text-gray-400 hover:bg-white/50 dark:hover:bg-gray-800/50'
+                      }`}
+                      title={section.title}
+                    >
+                      <Icon className="w-5 h-5" />
+                    </motion.button>
+                  );
+                })}
+              </div>
+            </div>
+          </motion.nav>
+        )}
+      </AnimatePresence>
 
       {/* Main Content */}
       <main className="pt-24 pb-12 px-4">
