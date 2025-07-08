@@ -44,9 +44,9 @@ const NavigationController: React.FC<NavigationControllerProps> = ({
         transition={{ delay: 1.5 }}
       >
         {isVisible ? (
-          <ChevronDown className="w-6 h-6" />
+          <ChevronDown className="w-10 h-10" />
         ) : (
-          <ChevronUp className="w-6 h-6" />
+          <ChevronUp className="w-10 h-10" />
         )}
       </motion.button>
 
