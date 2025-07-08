@@ -16,19 +16,16 @@ const NavigationController: React.FC<NavigationControllerProps> = ({
   const navItems = [
     {
       id: 'home' as const,
-      label: 'Beranda',
       icon: Home,
       description: 'Kalkulator IPK'
     },
     {
       id: 'ai-analysis' as const,
-      label: 'Analisis AI',
       icon: Brain,
       description: 'Rekomendasi Cerdas'
     },
     {
       id: 'documentation' as const,
-      label: 'Dokumentasi',
       icon: FileText,
       description: 'Panduan Lengkap'
     }
