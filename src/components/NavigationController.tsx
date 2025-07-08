@@ -106,8 +106,8 @@ const NavigationController: React.FC<NavigationControllerProps> = ({
                 })}
               </div>
 
-              {/* Mobile Layout */}
-              <div className="flex sm:hidden items-center gap-2">
+              {/* Mobile Layout - Icon Only with Flexible Arrangement */}
+              <div className="flex sm:hidden items-center justify-center gap-4">
                 {navItems.map((item, index) => {
                   const Icon = item.icon;
                   const isActive = currentPage === item.id;
@@ -116,26 +116,44 @@ const NavigationController: React.FC<NavigationControllerProps> = ({
                     <motion.button
                       key={item.id}
                       onClick={() => onPageChange(item.id)}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      className={`relative flex flex-col items-center gap-1 px-4 py-3 rounded-xl transition-all duration-300 min-w-[80px] ${
+                      whileHover={{ scale: 1.1, y: -3 }}
+                      whileTap={{ scale: 0.9 }}
+                      initial={{ opacity: 0, scale: 0.5, rotate: -180 }}
+                      animate={{ 
+                        opacity: 1, 
+                        scale: 1, 
+                        rotate: 0,
+                        transition: { 
+                          delay: index * 0.15,
+                          type: "spring",
+                          stiffness: 200,
+                          damping: 15
+                        }
+                      }}
+                      className={`relative p-4 rounded-2xl transition-all duration-300 ${
                         isActive
-                          ? 'bg-telkom-red text-white shadow-lg'
-                          : 'text-gray-600 dark:text-gray-400 hover:bg-white/50 dark:hover:bg-gray-800/50'
+                          ? 'bg-telkom-red text-white shadow-lg shadow-telkom-red/30'
+                          : 'text-gray-600 dark:text-gray-400 hover:bg-white/50 dark:hover:bg-gray-800/50 hover:text-telkom-red dark:hover:text-telkom-brightRed'
                       }`}
+                      title={item.label}
                     >
-                      <Icon className="w-5 h-5" />
-                      <div className="text-xs font-medium">{item.label}</div>
+                      <Icon className="w-6 h-6" />
                       
                       {isActive && (
                         <motion.div
                           layoutId="activeMobileIndicator"
-                          className="absolute inset-0 bg-telkom-red rounded-xl -z-10"
+                          className="absolute inset-0 bg-telkom-red rounded-2xl -z-10"
                           initial={false}
                           transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                        />
+                      )}
+                      
+                      {/* Active indicator dot */}
+                      {isActive && (
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          className="absolute -top-1 -right-1 w-3 h-3 bg-white rounded-full shadow-lg"
                         />
                       )}
                     </motion.button>
