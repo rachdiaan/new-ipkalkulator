@@ -332,7 +332,7 @@ const AIAnalysis: React.FC<AIAnalysisProps> = ({
     doc.setFont('helvetica', 'normal');
     doc.text('Telkom University - Kalkulator Akademik Terpadu', 105, 30, { align: 'center' });
     
-    let yPos = 55;
+    let yPos = 35;
     
     // Student Information Section
     doc.setTextColor(...textColor);
