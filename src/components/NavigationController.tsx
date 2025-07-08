@@ -17,17 +17,14 @@ const NavigationController: React.FC<NavigationControllerProps> = ({
     {
       id: 'home' as const,
       icon: Home,
-      description: 'Kalkulator IPK'
     },
     {
       id: 'ai-analysis' as const,
       icon: Brain,
-      description: 'Rekomendasi Cerdas'
     },
     {
       id: 'documentation' as const,
       icon: FileText,
-      description: 'Panduan Lengkap'
     }
   ];
 
