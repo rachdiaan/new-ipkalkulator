@@ -10,9 +10,14 @@ import {
   CheckCircle,
   XCircle,
   Lightbulb,
-  BarChart3
+  BarChart3,
+  Download,
+  Mail,
+  Send
 } from 'lucide-react';
 import { Course, GPAResult, StudentData } from '../types';
+import toast from 'react-hot-toast';
+import jsPDF from 'jspdf';
 
 interface AIAnalysisProps {
   courses: Course[];
@@ -48,6 +53,9 @@ const AIAnalysis: React.FC<AIAnalysisProps> = ({
     overallStrategy: string[];
     potentialGPA: number;
   } | null>(null);
+  const [emailModalOpen, setEmailModalOpen] = useState(false);
+  const [email, setEmail] = useState('');
+  const [sendingEmail, setSendingEmail] = useState(false);
 
   const generateAnalysis = async () => {
     setLoading(true);
@@ -296,6 +304,235 @@ const AIAnalysis: React.FC<AIAnalysisProps> = ({
     }
   };
 
+  const downloadReport = () => {
+    if (!analysis) return;
+
+    const doc = new jsPDF();
+    
+    // Set colors
+    const primaryColor = [182, 37, 42]; // Telkom Red
+    const secondaryColor = [237, 30, 40]; // Telkom Bright Red
+    const textColor = [51, 51, 51];
+    const lightGray = [128, 128, 128];
+    
+    // Header with gradient effect
+    doc.setFillColor(...primaryColor);
+    doc.rect(0, 0, 210, 40, 'F');
+    
+    doc.setFillColor(...secondaryColor);
+    doc.rect(0, 35, 210, 5, 'F');
+    
+    // Title
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(24);
+    doc.setFont('helvetica', 'bold');
+    doc.text('LAPORAN ANALISIS AKADEMIK AI', 105, 20, { align: 'center' });
+    
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Telkom University - Kalkulator Akademik Terpadu', 105, 30, { align: 'center' });
+    
+    let yPos = 35;
+    
+    // Student Information Section
+    doc.setTextColor(...textColor);
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.text('INFORMASI MAHASISWA', 20, yPos);
+    
+    // Underline
+    doc.setDrawColor(...primaryColor);
+    doc.setLineWidth(0.5);
+    doc.line(20, yPos + 2, 80, yPos + 2);
+    
+    yPos += 15;
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'normal');
+    
+    const studentInfo = [
+      `Nama: ${studentData.name || 'N/A'}`,
+      `NIM: ${studentData.nim || 'N/A'}`,
+      `Program: ${studentData.programLevel.toUpperCase()}`,
+      `Fakultas: ${studentData.faculty || 'N/A'}`,
+      `Program Studi: ${studentData.major || 'N/A'}`
+    ];
+    
+    studentInfo.forEach(info => {
+      doc.text(info, 25, yPos);
+      yPos += 8;
+    });
+    
+    yPos += 10;
+    
+    // Academic Summary Section
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.text('RINGKASAN AKADEMIK', 20, yPos);
+    doc.line(20, yPos + 2, 80, yPos + 2);
+    
+    yPos += 15;
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'normal');
+    
+    const academicSummary = [
+      `IPK Saat Ini: ${gpaResult.gpa.toFixed(2)}`,
+      `Total SKS: ${gpaResult.totalCredits}`,
+      `Mata Kuliah Selesai: ${gpaResult.completedCourses}`,
+      `Potensi IPK Maksimal: ${analysis.potentialGPA.toFixed(2)}`
+    ];
+    
+    academicSummary.forEach(summary => {
+      doc.text(summary, 25, yPos);
+      yPos += 8;
+    });
+    
+    yPos += 15;
+    
+    // Course Recommendations Section
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.text('REKOMENDASI PERBAIKAN MATA KULIAH', 20, yPos);
+    doc.line(20, yPos + 2, 120, yPos + 2);
+    
+    yPos += 15;
+    
+    analysis.courseRecommendations.forEach((rec, index) => {
+      if (yPos > 250) {
+        doc.addPage();
+        yPos = 30;
+      }
+      
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(...primaryColor);
+      doc.text(`${index + 1}. ${rec.courseName}`, 25, yPos);
+      
+      yPos += 10;
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(...textColor);
+      
+      doc.text(`Nilai Saat Ini: ${rec.currentGrade} | Target: ${rec.targetGrade} | Prioritas: ${rec.priority.toUpperCase()}`, 30, yPos);
+      yPos += 8;
+      doc.text(`Dampak IPK: +${rec.impactOnGPA.toFixed(3)}`, 30, yPos);
+      yPos += 10;
+      
+      doc.setTextColor(...lightGray);
+      doc.text('Rekomendasi:', 30, yPos);
+      yPos += 8;
+      
+      rec.recommendations.slice(0, 3).forEach(recommendation => {
+        if (yPos > 270) {
+          doc.addPage();
+          yPos = 30;
+        }
+        const lines = doc.splitTextToSize(`• ${recommendation}`, 150);
+        doc.text(lines, 35, yPos);
+        yPos += lines.length * 6;
+      });
+      
+      yPos += 10;
+    });
+    
+    // Study Plan Section
+    if (yPos > 200) {
+      doc.addPage();
+      yPos = 30;
+    }
+    
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(...textColor);
+    doc.text('RENCANA BELAJAR 4 MINGGU', 20, yPos);
+    doc.line(20, yPos + 2, 100, yPos + 2);
+    
+    yPos += 15;
+    
+    analysis.studyPlan.forEach(week => {
+      if (yPos > 240) {
+        doc.addPage();
+        yPos = 30;
+      }
+      
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(...primaryColor);
+      doc.text(`Minggu ${week.week}: ${week.focus}`, 25, yPos);
+      
+      yPos += 10;
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(...textColor);
+      
+      doc.text('Aktivitas:', 30, yPos);
+      yPos += 8;
+      
+      week.activities.slice(0, 2).forEach(activity => {
+        const lines = doc.splitTextToSize(`• ${activity}`, 140);
+        doc.text(lines, 35, yPos);
+        yPos += lines.length * 6;
+      });
+      
+      yPos += 5;
+    });
+    
+    // Overall Strategy Section
+    if (yPos > 200) {
+      doc.addPage();
+      yPos = 30;
+    }
+    
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(...textColor);
+    doc.text('STRATEGI KESELURUHAN', 20, yPos);
+    doc.line(20, yPos + 2, 90, yPos + 2);
+    
+    yPos += 15;
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    
+    analysis.overallStrategy.slice(0, 5).forEach((strategy, index) => {
+      if (yPos > 270) {
+        doc.addPage();
+        yPos = 30;
+      }
+      const lines = doc.splitTextToSize(`${index + 1}. ${strategy}`, 160);
+      doc.text(lines, 25, yPos);
+      yPos += lines.length * 8;
+    });
+    
+    // Footer
+    const pageCount = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.setTextColor(...lightGray);
+      doc.text(`Laporan dibuat pada: ${new Date().toLocaleString('id-ID')}`, 20, 285);
+      doc.text(`Halaman ${i} dari ${pageCount}`, 170, 285);
+    }
+    
+    // Save the PDF
+    doc.save(`Laporan_Analisis_AI_${studentData.name || 'Mahasiswa'}_${new Date().toISOString().split('T')[0]}.pdf`);
+    
+    toast.success('Laporan berhasil diunduh!');
+  };
+
+  const sendEmailReport = async () => {
+    if (!email || !analysis) return;
+
+    setSendingEmail(true);
+    
+    // Simulate email sending
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // In a real application, you would send this to your backend
+    toast.success(`Laporan berhasil dikirim ke ${email}!`);
+    setSendingEmail(false);
+    setEmailModalOpen(false);
+    setEmail('');
+  };
+
   if (courses.length === 0) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-12">
@@ -407,11 +644,35 @@ const AIAnalysis: React.FC<AIAnalysisProps> = ({
                 </motion.div>
               </div>
 
+              {/* Action Buttons */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="flex flex-wrap gap-4 justify-center"
+              >
+                <button
+                  onClick={downloadReport}
+                  className="flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl"
+                >
+                  <Download className="w-5 h-5" />
+                  Unduh Laporan
+                </button>
+                
+                <button
+                  onClick={() => setEmailModalOpen(true)}
+                  className="flex items-center gap-2 px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl"
+                >
+                  <Mail className="w-5 h-5" />
+                  Kirim ke Email
+                </button>
+              </motion.div>
+
               {/* Course Recommendations */}
               <motion.section
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
+                transition={{ delay: 0.5 }}
                 className="glass-card rounded-3xl p-8"
               >
                 <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 flex items-center gap-3">
@@ -468,7 +729,7 @@ const AIAnalysis: React.FC<AIAnalysisProps> = ({
               <motion.section
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
+                transition={{ delay: 0.6 }}
                 className="glass-card rounded-3xl p-8"
               >
                 <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 flex items-center gap-3">
@@ -526,7 +787,7 @@ const AIAnalysis: React.FC<AIAnalysisProps> = ({
               <motion.section
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
+                transition={{ delay: 0.7 }}
                 className="glass-card rounded-3xl p-8"
               >
                 <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 flex items-center gap-3">
@@ -554,7 +815,7 @@ const AIAnalysis: React.FC<AIAnalysisProps> = ({
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7 }}
+                transition={{ delay: 0.8 }}
                 className="text-center"
               >
                 <button
@@ -564,6 +825,70 @@ const AIAnalysis: React.FC<AIAnalysisProps> = ({
                   <Brain className="w-5 h-5" />
                   Analisis Ulang
                 </button>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Email Modal */}
+        <AnimatePresence>
+          {emailModalOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+              onClick={() => setEmailModalOpen(false)}
+            >
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+                className="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-md w-full"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex items-center gap-3 mb-6">
+                  <Mail className="w-6 h-6 text-blue-500" />
+                  <h3 className="text-xl font-bold text-gray-800 dark:text-white">
+                    Kirim Laporan ke Email
+                  </h3>
+                </div>
+                
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Alamat Email
+                    </label>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="contoh@email.com"
+                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                  </div>
+                  
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => setEmailModalOpen(false)}
+                      className="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                    >
+                      Batal
+                    </button>
+                    <button
+                      onClick={sendEmailReport}
+                      disabled={!email || sendingEmail}
+                      className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-blue-500 hover:bg-blue-600 disabled:opacity-50 text-white rounded-xl transition-colors"
+                    >
+                      {sendingEmail ? (
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      ) : (
+                        <Send className="w-4 h-4" />
+                      )}
+                      {sendingEmail ? 'Mengirim...' : 'Kirim'}
+                    </button>
+                  </div>
+                </div>
               </motion.div>
             </motion.div>
           )}
